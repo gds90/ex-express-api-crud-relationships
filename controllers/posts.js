@@ -51,6 +51,11 @@ const index = async (req, res) => {
                     select: {
                         name: true
                     }
+                },
+                category: {
+                    select: {
+                        name: true
+                    }
                 }
             },
             skip: offset,
@@ -73,7 +78,21 @@ const index = async (req, res) => {
 const show = async (req, res) => {
     try {
         const { slug } = req.params;
-        const post = await prisma.post.findUnique({ where: { slug } });
+        const post = await prisma.post.findUnique({
+            where: { slug },
+            include: {
+                tags: {
+                    select: {
+                        name: true
+                    }
+                },
+                category: {
+                    select: {
+                        name: true
+                    }
+                }
+            }
+        });
 
         if (!post) {
             return res.status(404).json({ message: "Post non trovato" });
